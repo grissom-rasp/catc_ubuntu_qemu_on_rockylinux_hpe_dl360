@@ -1,0 +1,7 @@
+===== sysbench memory single-thread read latency per pinned vCPU (subset) =====
+vcpu0 1024.00 MiB transferred (6719.11 MiB/sec)
+vcpu5 1024.00 MiB transferred (6736.86 MiB/sec)
+vcpu10 1024.00 MiB transferred (6663.29 MiB/sec)
+vcpu20 1024.00 MiB transferred (6728.12 MiB/sec)
+vcpu30 1024.00 MiB transferred (6734.95 MiB/sec)
+vcpu39 1024.00 MiB transferred (6641.75 MiB/sec)

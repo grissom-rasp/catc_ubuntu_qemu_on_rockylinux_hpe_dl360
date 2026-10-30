@@ -1,0 +1,13 @@
+===== baseline: 2026-10-30T07:05:04Z label=optionA ncpu=40 mem=47GiB =====
+Model name:                              Intel(R) Xeon(R) Silver 4310 CPU @ 2.10GHz
+BIOS Model name:                         RHEL-10.2.0 PC (Q35 + ICH9, 2009)  CPU @ 2.0GHz
+Thread(s) per core:                      2
+Core(s) per socket:                      10
+Socket(s):                               2
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-39
+/sys/devices/system/node/node0 cpus=0-39 Node 0 MemTotal:       49317424 kB
+HugePages_Total:       0
+Hugepagesize:       2048 kB
+Combined:	1
+Combined:	1

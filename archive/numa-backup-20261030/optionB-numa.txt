@@ -1,0 +1,3 @@
+===== NUMA probe: interleave-all vs single-node local write bandwidth =====
+interleave-all : 8191.99 MiB transferred (8108.48 MiB/sec)
+local has_cpu (6 thr) : n/a

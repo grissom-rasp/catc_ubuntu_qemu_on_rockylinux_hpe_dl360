@@ -1,0 +1,19 @@
+===== baseline: 2026-10-30T07:09:33Z label=optionB ncpu=40 mem=47GiB =====
+Model name:                              Intel(R) Xeon(R) Silver 4310 CPU @ 2.10GHz
+BIOS Model name:                         RHEL-10.2.0 PC (Q35 + ICH9, 2009)  CPU @ 2.0GHz
+Thread(s) per core:                      2
+Core(s) per socket:                      10
+Socket(s):                               2
+NUMA node(s):                            4
+NUMA node0 CPU(s):                       0-9
+NUMA node1 CPU(s):                       10-19
+NUMA node2 CPU(s):                       20-29
+NUMA node3 CPU(s):                       30-39
+/sys/devices/system/node/node0 cpus=0-9 Node 0 MemTotal:       12315964 kB
+/sys/devices/system/node/node1 cpus=10-19 Node 1 MemTotal:       12382684 kB
+/sys/devices/system/node/node2 cpus=20-29 Node 2 MemTotal:       12382680 kB
+/sys/devices/system/node/node3 cpus=30-39 Node 3 MemTotal:       12333884 kB
+HugePages_Total:       0
+Hugepagesize:       2048 kB
+Combined:	1
+Combined:	1

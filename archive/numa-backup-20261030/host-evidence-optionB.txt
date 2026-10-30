@@ -1,0 +1,19 @@
+== host topology ==
+Thread(s) per core:                      2
+Core(s) per socket:                      12
+Socket(s):                               2
+NUMA node(s):                            4
+NUMA node0 CPU(s):                       0-5,24-29
+NUMA node1 CPU(s):                       6-11,30-35
+NUMA node2 CPU(s):                       12-17,36-41
+NUMA node3 CPU(s):                       18-23,42-47
+== optionA qemu backend was: host-nodes=[0,1,2,3] policy=interleave (captured 07:05) ==
+== optionB qemu backend now ==
+policy=delay
+== optionB vcpu pins (host side) ==
+0 0-47 1 10 11 12 13 14 15 16 17 18 19 2 20 21 22 23 24 25 26 27 3 30 31 32 33 36 37 38 39 4 42 43 44 45 5 6 7 8 9 
+== per-node free now ==
+node0 MemFree=0 kB
+node1 MemFree=1 kB
+node2 MemFree=2 kB
+node3 MemFree=3 kB
