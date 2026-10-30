@@ -13,3 +13,11 @@ logs/
 
 # Claude local state
 .claude/
+
+# Exported session transcripts (the conversation export contains the password)
+/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-*.txt
+
+# VM images
+*.qcow2
+*.img
+*.raw
