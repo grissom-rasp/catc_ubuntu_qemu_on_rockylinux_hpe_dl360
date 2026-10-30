@@ -11,7 +11,7 @@ This repository keeps the steps needed to replace an existing Ubuntu 26.04 LTS S
 - Disk: 300 GiB virtual hard disk
 - Network: bridged network on `br0` in the `192.168.0.0/24` subnet with DHCP
 - Admin user: `catc_ubuntu_kvm`
-- Password: `P@ssw0rd.Nms`
+- Password: `${VM_PASSWORD:?set VM_PASSWORD in the environment}`
 - SSH: enabled permanently and password auth enabled
 
 ## Host preparation
@@ -71,7 +71,7 @@ The script performs the following actions:
 - downloads the Ubuntu 24.04 Server cloud image
 - creates a 48 vCPU, 64 GiB, 300 GiB VM
 - connects the guest to `br0` using DHCP on the `192.168.0.0/24` subnet
-- configures the admin user `catc_ubuntu_kvm` with password `P@ssw0rd.Nms`
+- configures the admin user `catc_ubuntu_kvm` with password `${VM_PASSWORD:?set VM_PASSWORD in the environment}`
 - enables SSH and password authentication in the guest
 
 ## Cloud-init configuration details
@@ -79,7 +79,7 @@ The script performs the following actions:
 The install uses the Ubuntu cloud-config format to provision the guest. The login for SSH is:
 
 - user: `catc_ubuntu_kvm`
-- password: `P@ssw0rd.Nms`
+- password: `${VM_PASSWORD:?set VM_PASSWORD in the environment}`
 
 The cloud-init configuration ensures that SSH remains enabled on every reboot by adding the following steps:
 
@@ -89,12 +89,12 @@ users:
     groups: [sudo]
     shell: /bin/bash
     lock_passwd: false
-    plain_text_passwd: "P@ssw0rd.Nms"
+    plain_text_passwd: "${VM_PASSWORD:?set VM_PASSWORD in the environment}"
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
 chpasswd:
   expire: false
   list: |
-    catc_ubuntu_kvm:P@ssw0rd.Nms
+    catc_ubuntu_kvm:${VM_PASSWORD:?set VM_PASSWORD in the environment}
 ssh_pwauth: true
 runcmd:
   - [ sh, -c, "systemctl enable --now ssh" ]

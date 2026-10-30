@@ -7,7 +7,7 @@ VM_VCPUS="${VM_VCPUS:-48}"
 VM_DISK_GB="${VM_DISK_GB:-300}"
 VM_BRIDGE="${VM_BRIDGE:-br0}"
 VM_USER="${VM_USER:-catc_ubuntu_kvm}"
-VM_PASSWORD="${VM_PASSWORD:-P@ssw0rd.Nms}"
+VM_PASSWORD="${VM_PASSWORD:?set VM_PASSWORD in the environment}"
 IMAGE_DIR="${IMAGE_DIR:-/var/lib/libvirt/images}"
 IMAGE_URL="${IMAGE_URL:-https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img}"
 
