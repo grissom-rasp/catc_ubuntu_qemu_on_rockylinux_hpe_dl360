@@ -30,6 +30,35 @@ ssh rocky-dl360 'echo "$SSHPASS" | sudo -S true'
 - Prefer `ssh -T -o BatchMode=yes rocky-dl360 '<script>'`; batch remote work into one script per call.
 - Long remote ops (dnf, image downloads): `run_in_background: true`, then read the task output file.
 
+## Common commands
+
+```sh
+# Credentials (must be sourced locally first; never printed)
+set -a && . ./.ssh-env && set +a
+
+# Render cloud-init user-data + build NoCloud seed ISO (remote secrets)
+./scripts/build-seed.sh
+
+# 15-minute steady-state sample of host + guest (guest IP is DHCP; update if it moved)
+./scripts/monitor.sh 192.168.0.174 15
+
+# Inventory guest + host + benchmarks (installs/removes iperf3; runs from laptop)
+./scripts/collect-ubuntu24-info.sh
+
+# NUMA benchmark suite (run INSIDE guest as root): ./numa-bench.sh <label> <outdir>
+```
+
+Unattended root jobs on the DL360 (nohup/setsid don't survive SSH disconnect there) must be
+launched with `systemd-run --unit=… --collect`, staging the script in `/usr/local/sbin`.
+
+## Current guest NUMA configuration (applied 2026-10-30)
+
+The running `ubuntu24` domain uses **Option B** (Cisco-style pinning): 4 guest NUMA cells,
+strict per-node memory, 40 `<vcpupin>` entries mapping vCPU 0-9→host node 0 CPUs, 10-19→node 1,
+20-29→node 2, 30-39→node 3; `migratable='off'`. Guest sees `NUMA node(s): 4`. Do not revert
+to Option A without re-running `scripts/numa-bench.sh` and checking the A/B reports in `docs/`.
+The live XML is the source of truth: `virsh -c qemu:///system dumpxml ubuntu24 | grep ...`.
+
 ## KVM / Cockpit facts (set up 2026-10-29, guest replaced 2026-10-30)
 
 - Installed: qemu-kvm 10.1, libvirt 11.10 (**modular daemons** — manage `virtqemud`/`virtnetworkd`/`virtstoraged`, not monolithic `libvirtd`), virt-install 5.1, libguestfs-tools, cockpit 356 + cockpit-machines.
@@ -72,8 +101,12 @@ ssh rocky-dl360 'echo "$SSHPASS" | sudo -S true'
 - `vm-ubuntu26/` — retired guest's cloud-init and seed (kept for history).
 - `cloud-init/` — live cloud-init `meta-data` and `user-data.template`; the rendered
   `user-data` and `seed-ubuntu24.iso` are git-ignored (they contain the password).
-- `scripts/` — `build-seed.sh`, `br0-switch.sh`, `br0-rollback.sh`, `monitor.sh`.
-- `docs/` — installation guideline, verification matrix, monitoring analysis, legacy notes.
+- `scripts/` — `build-seed.sh`, `br0-switch.sh`, `br0-rollback.sh`, `monitor.sh`,
+  `monitor_kvm_vm.sh`, `collect-ubuntu24-info.sh`, `install_ubuntu_24_kvm.sh`,
+  `numa-bench.sh`, `sync-to-sas.sh`, `run-on-git-sync.sh`.
+- `docs/` — installation guideline, verification matrix, monitoring analysis, legacy notes,
+  NUMA A/B report and optimization guideline.
+- `archive/` — XML/inventory of the removed `ubuntu26` domain and the A/B NUMA backups.
 - `archive/` — XML/inventory of the removed `ubuntu26` domain.
 - `ubuntu-vm-setup-YYYY-MM-DD.md` — step-by-step setup/ops logs for work done on the DL360. Append new work there (or a fresh dated log) rather than editing history.
 - `.ssh-env` — credential env, chmod 600.
