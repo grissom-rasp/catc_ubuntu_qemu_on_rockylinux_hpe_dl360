@@ -1,0 +1,15 @@
+# Secrets
+.ssh-env
+
+# Generated cloud-init artifacts (contain substituted credentials)
+cloud-init/user-data
+cloud-init/*.iso
+vm-ubuntu26/seed.iso
+vm-ubuntu26/user-data
+
+# Logs and runtime output
+logs/
+*.log
+
+# Claude local state
+.claude/

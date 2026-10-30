@@ -1,0 +1,54 @@
+#cloud-config
+# Ubuntu 24.04 (noble) cloud image — generated from user-data.template.
+# Placeholders __PASSWORD__ and __SSH_PUBKEY__ are substituted by
+# scripts/build-seed.sh; the generated file and the seed ISO are git-ignored.
+
+hostname: ubuntu24
+fqdn: ubuntu24.lan
+manage_etc_hosts: true
+
+users:
+  - name: catc_ubuntu_kvm
+    gecos: Ubuntu KVM admin
+    primary_group: catc_ubuntu_kvm
+    groups: [adm, sudo]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: false
+    plain_text_passwd: '__PASSWORD__'
+    ssh_authorized_keys:
+      - '__SSH_PUBKEY__'
+
+# Ask cloud-init to rewrite /etc/ssh/sshd_config.d/50-cloud-init.conf with
+# "PasswordAuthentication yes" so the setting also survives package updates.
+ssh_pwauth: true
+
+chpasswd:
+  expire: false
+
+# sshd keeps the FIRST value it reads, and drop-ins are read in lexical order.
+# 00-* therefore wins over 50-cloud-init.conf ("PasswordAuthentication no").
+write_files:
+  - path: /etc/ssh/sshd_config.d/00-catc-password-auth.conf
+    owner: root:root
+    permissions: '0644'
+    content: |
+      # Managed for catc_ubuntu_kvm — password auth must survive reboots.
+      PasswordAuthentication yes
+      KbdInteractiveAuthentication yes
+      UsePAM yes
+      PermitRootLogin no
+
+package_update: true
+packages:
+  - qemu-guest-agent
+
+runcmd:
+  - [ systemctl, enable, --now, ssh ]
+  - [ systemctl, enable, --now, qemu-guest-agent ]
+  - [ sh, -c, "echo \"cloud-init finished $(date -u)\" > /var/log/cloud-init-done.txt" ]
+
+# Keep cloud-init from clobbering the network config on later boots.
+# (The previous guest broke exactly this way: a MAC-bound netplan file that
+# cloud-init regenerated from stale cached state.)
+final_message: "ubuntu24 ready after $UPTIME seconds"

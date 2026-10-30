@@ -1,0 +1,24 @@
+Id:             6
+Name:           ubuntu26
+UUID:           5ee4a891-468a-4af1-804d-4b7d87a2f9c1
+OS Type:        hvm
+State:          running
+CPU(s):         4
+CPU time:       25.8s
+Max memory:     8388608 KiB
+Used memory:    8388608 KiB
+Persistent:     yes
+Autostart:      disable
+Autostart Once: disable
+Managed save:   no
+Security model: selinux
+Security DOI:   0
+Security label: system_u:system_r:svirt_t:s0:c143,c461 (enforcing)
+
+ Target   Source
+-------------------------------------------------------
+ vda      /var/lib/libvirt/images/ubuntu26-root.qcow2
+ sda      /var/lib/libvirt/images/seed-ubuntu26.iso
+
+qemu-img: Could not open '/var/lib/libvirt/images/ubuntu26-root.qcow2': Failed to get shared "write" lock
+Is another process using the image [/var/lib/libvirt/images/ubuntu26-root.qcow2]?
