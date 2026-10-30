@@ -53,7 +53,19 @@ ssh rocky-dl360 'echo "$SSHPASS" | sudo -S true'
 - Host `sudo -n` does **not** work for `catc`; root actions need the stdin pattern below.
 - `nohup`/`setsid` do not survive an SSH disconnect on this host — stage scripts in
   `/usr/local/sbin` and launch with `systemd-run --unit=… --collect`.
+
 - `catc` is in the `libvirt` group, so plain `virsh ...` works over fresh SSH sessions.
+
+## Local backup to 600G SAS disk
+
+- 600G SAS disk: `/dev/sda` (HPE EG000600JXLV), mounted at `/mnt/sas-share`
+  (btrfs), owned by `grissom-sas:grissom-sas`.
+- Project mirror on that disk: `/mnt/sas-share/rockylinux_remote`
+  (created/maintained with `scripts/sync-to-sas.sh`). Localhost copy is canonical;
+  sync **overwrites** the SAS copy (rsync `-aH --delete`).
+- A Claude Code `PostToolUse` (Bash) hook in `.claude/settings.local.json` runs
+  `scripts/run-on-git-sync.sh`, which only invokes `scripts/sync-to-sas.sh` when
+  the Bash command contains `git sync`. Project-scoped only.
 
 ## Directory layout
 

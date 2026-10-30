@@ -57,9 +57,10 @@ Ordered by value per unit of risk.
    `sudo systemctl set-default multi-user.target` (Cockpit on :9090 keeps the same UI reach).
    Keep `graphical.target` if the on-console virt-manager is genuinely used.
 4. **Storage ceiling is the real constraint.** 200 GiB is virtual; ≈61 GiB is physical on
-   `rl-root`. `sda` (1.2 T) is unused and both disks report `ROTA=0`. Moving the pool to a
-   dedicated filesystem on `sda` removes the risk of the guest filling `/` and taking the
-   host down, and isolates guest I/O from the OS.
+   `rl-root`. The second LUN, **`sdb` (1.2 T), is unused** and both disks report `ROTA=0`
+   (that figure comes from the MR416i-a virtual disks and says nothing about the physical
+   media). Moving the pool to a dedicated filesystem on `sdb` removes the risk of the guest
+   filling `/` and taking the host down, and isolates guest I/O from the OS.
 5. **Queue scheduler.** `sdb` uses `mq-deadline` on non-rotational media. Once I/O is moved
    to a dedicated volume, `none` is usually better; measure before/after with the same
    30 s sampler rather than switching blind:

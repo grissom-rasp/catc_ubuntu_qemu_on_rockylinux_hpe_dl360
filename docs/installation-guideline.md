@@ -325,9 +325,10 @@ ip neigh show dev br0 | grep 52:54:00:24:00:24
 - now: ~61 GiB free on `rl-root`;
 - `/home` (`rl-home`) has ~487 GiB free and could host a second dir pool with
   `semanage fcontext -a -t virt_image_t "/home/libvirt-images(/.*)?`;
-- long term, the DL360 has **`sda` 1.2 TB entirely unused** — partition it, `mkfs.xfs`,
-  label it, mount it, label `virt_image_t`, and define a new dir pool. That is the real
-  "grow later" path.
+- long term, the DL360 has a second LUN — **`sdb`, 1.2 TB, entirely unused** (unpartitioned,
+  unmounted, absent from `/etc/fstab`; `sda` is the 600 GB disk that already carries the
+  `rl-*` LVM volumes) — partition it, `mkfs.xfs`, label it, mount it, label `virt_image_t`,
+  and define a new dir pool. That is the real "grow later" path.
 
 **Seed regeneration** (if the password or key changes): `./scripts/build-seed.sh`, scp the
 ISO, re-attach with `change-media --insert`, `virsh reboot`, then eject again. Changing the

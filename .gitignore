@@ -21,3 +21,14 @@ logs/
 *.qcow2
 *.img
 *.raw
+
+# Downloaded install media / cloud images (large; do not commit)
+downloads/
+
+# Host inventory dumps — contain serial numbers, UUIDs, MACs, sudoers,
+# full passwd/group and journal excerpts. Local reference only; never push.
+rockylinux_info/
+
+# Guest inventory dumps — same sensitivity class as rockylinux_info/ (MAC,
+# account lists, journal excerpts, internal addressing). Local only; never push.
+vm-ubuntu24/ubuntu24_info/
