@@ -8,11 +8,11 @@ running **Rocky Linux 10.2**, with the guest bridged directly onto the
 |---|---|
 | Host | `rocky-dl360` — Rocky Linux 10.2, `192.168.0.186`, KVM/libvirt 11.10 |
 | Guest domain | `ubuntu24` — Ubuntu 24.04 LTS cloud image (noble) |
-| Guest address | DHCP from the LAN router (DHCP after rebuild) |
+| Guest address | DHCP from the LAN router (last seen `192.168.0.172`) |
 | Guest hardware | 40 vCPU (2×10×2), 48 GiB RAM, 200 GiB thin qcow2 |
 | Guest admin | `catc_ubuntu_kvm` — sudo, key **and** password SSH, persists reboots |
 | Networking | Linux bridge `br0` on `ens1f2`; libvirt NAT `default` left intact |
-| Web UI | Cockpit on the guest at **https://192.168.0.174:9090** (PAM login) |
+| Web UI | Cockpit on the host at **https://192.168.0.186:9090** (Virtual Machines page; the guest has no Cockpit of its own) |
 
 ## Documentation
 

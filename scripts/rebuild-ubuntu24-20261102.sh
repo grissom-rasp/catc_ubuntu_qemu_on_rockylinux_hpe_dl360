@@ -307,7 +307,7 @@ VERIFY="$LOGDIR/ubuntu24-verify-$STAMP.txt"
     echo "--- agent ---"; systemctl is-active qemu-guest-agent
   ' 2>&1 || echo "(verification ssh returned nonzero — see log)"
 } | tee "$VERIFY"
-grep -q "PasswordAuthentication yes" "$VERIFY" || say "E: WARN — password auth not confirmed in sshd -T"
+grep -qi "passwordauthentication yes" "$VERIFY" || say "E: WARN — password auth not confirmed in sshd -T"
 NUMA_NODES=$(grep -oP "NUMA node\(s\):\s+\K\d+" "$VERIFY" || echo 0)
 say "E: guest sees $NUMA_NODES NUMA nodes (expect 4)"
 [[ "$NUMA_NODES" == "4" ]] || say "E: WARN — NUMA cells != 4"

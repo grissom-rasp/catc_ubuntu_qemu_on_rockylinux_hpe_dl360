@@ -40,7 +40,7 @@ set -a && . ./.ssh-env && set +a
 ./scripts/build-seed.sh
 
 # 15-minute steady-state sample of host + guest (guest IP is DHCP; update if it moved)
-./scripts/monitor.sh 192.168.0.174 15
+./scripts/monitor.sh 192.168.0.172 15
 
 # Inventory guest + host + benchmarks (installs/removes iperf3; runs from laptop)
 ./scripts/collect-ubuntu24-info.sh
@@ -51,7 +51,7 @@ set -a && . ./.ssh-env && set +a
 Unattended root jobs on the DL360 (nohup/setsid don't survive SSH disconnect there) must be
 launched with `systemd-run --unit=… --collect`, staging the script in `/usr/local/sbin`.
 
-## Current guest NUMA configuration (applied 2026-10-30)
+## Current guest NUMA configuration (Option B; re-applied 2026-11-02 on the rebuilt host)
 
 The running `ubuntu24` domain uses **Option B** (Cisco-style pinning): 4 guest NUMA cells,
 strict per-node memory, 40 `<vcpupin>` entries mapping vCPU 0-9→host node 0 CPUs, 10-19→node 1,
@@ -59,19 +59,18 @@ strict per-node memory, 40 `<vcpupin>` entries mapping vCPU 0-9→host node 0 CP
 to Option A without re-running `scripts/numa-bench.sh` and checking the A/B reports in `docs/`.
 The live XML is the source of truth: `virsh -c qemu:///system dumpxml ubuntu24 | grep ...`.
 
-## KVM / Cockpit facts (set up 2026-10-29, guest replaced 2026-10-30)
+## KVM / Cockpit facts (built 2026-10-29; **host OS + guest fully rebuilt 2026-11-02** after the RAID6 re-install — see `ubuntu-vm-setup-20261102-*-rebuild-raid6.md`)
 
 - Installed: qemu-kvm 10.1, libvirt 11.10 (**modular daemons** — manage `virtqemud`/`virtnetworkd`/`virtstoraged`, not monolithic `libvirtd`), virt-install 5.1, libguestfs-tools, cockpit 356 + cockpit-machines.
 - Services: `virtqemud/virtnetworkd/virtstoraged` + `cockpit.socket` enabled; firewalld has the `cockpit` service.
 - Desktop: the DL360 **does** have a monitor attached and runs GNOME on Wayland (GDM on tty2) — graphics via the integrated Matrox MGA G200eH3 (iLO/BMC video). Do not assume it is headless.
-- `virt-manager` 5.1 is **installed locally on the DL360** (2026-10-30) and can be launched from its GNOME desktop.
-- GUI options: **virt-manager on the DL360 desktop**, **Cockpit at https://192.168.0.186:9090** (Virtual Machines page), or `virt-manager` from the laptop against `qemu+ssh://rocky-dl360/system` as a remote fallback.
-- **Cockpit is also installed inside the `ubuntu24` guest** (cockpit 314): https://192.168.0.174:9090, PAM login as `catc_ubuntu_kvm`, socket-activated and enabled. It has no cockpit-machines package, so no VM page there.
+- `virt-manager` is **not installable on Rocky 10** (removed upstream in RHEL 10; absent from AppStream *and* EPEL 10 — dnf has no match). GUI = **Cockpit at https://192.168.0.186:9090** (Virtual Machines page), or `virt-manager` on a laptop against `qemu+ssh://rocky-dl360/system` as a remote fallback.
+- The `ubuntu24` guest has **no Cockpit of its own** (fresh 2026-11-02 cloud-init installs only qemu-guest-agent + sshd).
 - VM images live in `/var/lib/libvirt/images/` on the DL360.
 - VT-x is enabled; VT-d/IOMMU is **not** (fine unless doing PCI passthrough).
-- **Current guest (2026-10-30): `ubuntu24`** — Ubuntu 24.04 LTS headless cloud image, 40 vCPU
+- **Current guest (rebuilt 2026-11-02): `ubuntu24`** — Ubuntu 24.04 LTS headless cloud image, 40 vCPU
   (2×10×2), 48 GiB, 200 GiB thin qcow2, admin `catc_ubuntu_kvm` (sudo, key **and** password
-  SSH, persists reboots), autostart enabled, serial console only.
+  SSH, persists reboots), autostart enabled, serial console only; DHCP last seen `192.168.0.172`.
 - **LAN networking is now bridged**: `br0` over `ens1f2`, host keeps `192.168.0.186` via
   cloned MAC; the guest DHCPs from the router on 192.168.0.0/24 and is reachable from every
   LAN host *and* from Rocky. The NAT network `default`/`virbr0` still exists but is unused.
