@@ -7,6 +7,10 @@ hostname: ubuntu24
 fqdn: ubuntu24.lan
 manage_etc_hosts: true
 
+# HKT everywhere (2026-11-02): guest timezone set at first boot; systemd-timesyncd
+# gets hk.pool.ntp.org via /etc/systemd/timesyncd.conf.d/hk.conf (added separately).
+timezone: Asia/Hong_Kong
+
 users:
   - name: catc_ubuntu_kvm
     gecos: Ubuntu KVM admin
