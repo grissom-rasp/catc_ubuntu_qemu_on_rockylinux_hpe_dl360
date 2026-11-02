@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A workspace (not a git repo) of notes, scripts, and logs for remotely administering a bare-metal **HPE ProLiant DL360 Gen10+**, hostname of record `rocky-dl360`:
 
 - Session normally runs on an **Ubuntu** laptop (`hp840g8.local`, **192.168.0.100** — verified 2026-10-30; the older `.151` was stale); every real target is reached **remotely over SSH** from here.
-- Target host: `catc@192.168.0.188`, **Rocky Linux 10.2** (kernel 6.12), ssh alias `rocky-dl360` (passwordless, ed25519).
+- Target host: `catc@192.168.0.186`, **Rocky Linux 10.2** (kernel 6.12), ssh alias `rocky-dl360` (passwordless, ed25519).
 - `rocky-dl360`'s **sudo password equals its SSH password**, but sudo over SSH gets it via **stdin**, not env: see the pattern below.
 
 ## Credentials handling
@@ -65,14 +65,14 @@ The live XML is the source of truth: `virsh -c qemu:///system dumpxml ubuntu24 |
 - Services: `virtqemud/virtnetworkd/virtstoraged` + `cockpit.socket` enabled; firewalld has the `cockpit` service.
 - Desktop: the DL360 **does** have a monitor attached and runs GNOME on Wayland (GDM on tty2) — graphics via the integrated Matrox MGA G200eH3 (iLO/BMC video). Do not assume it is headless.
 - `virt-manager` 5.1 is **installed locally on the DL360** (2026-10-30) and can be launched from its GNOME desktop.
-- GUI options: **virt-manager on the DL360 desktop**, **Cockpit at https://192.168.0.188:9090** (Virtual Machines page), or `virt-manager` from the laptop against `qemu+ssh://rocky-dl360/system` as a remote fallback.
+- GUI options: **virt-manager on the DL360 desktop**, **Cockpit at https://192.168.0.186:9090** (Virtual Machines page), or `virt-manager` from the laptop against `qemu+ssh://rocky-dl360/system` as a remote fallback.
 - **Cockpit is also installed inside the `ubuntu24` guest** (cockpit 314): https://192.168.0.174:9090, PAM login as `catc_ubuntu_kvm`, socket-activated and enabled. It has no cockpit-machines package, so no VM page there.
 - VM images live in `/var/lib/libvirt/images/` on the DL360.
 - VT-x is enabled; VT-d/IOMMU is **not** (fine unless doing PCI passthrough).
 - **Current guest (2026-10-30): `ubuntu24`** — Ubuntu 24.04 LTS headless cloud image, 40 vCPU
   (2×10×2), 48 GiB, 200 GiB thin qcow2, admin `catc_ubuntu_kvm` (sudo, key **and** password
   SSH, persists reboots), autostart enabled, serial console only.
-- **LAN networking is now bridged**: `br0` over `ens1f2`, host keeps `192.168.0.188` via
+- **LAN networking is now bridged**: `br0` over `ens1f2`, host keeps `192.168.0.186` via
   cloned MAC; the guest DHCPs from the router on 192.168.0.0/24 and is reachable from every
   LAN host *and* from Rocky. The NAT network `default`/`virbr0` still exists but is unused.
 - `virsh net-dhcp-leases default` is **not** how to find the guest address any more — use
